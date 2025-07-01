@@ -1,0 +1,41 @@
+---
+import SplitBill from '../components/SplitBill.tsx';
+const siteUrl = "https://nota-splitbill.pages.dev"; // Replace with your actual domain later
+const pageTitle = "AI Split Bill | Slit Bill Nota Otomatis dengan AI (IDR)";
+const pageDescription = "Split bill with friends effortlessly. Upload a receipt photo, and our AI will automatically scan items, prices, and totals in Indonesian Rupiah (IDR).";
+const shareImage = "/social-share-image.png"; // You should create this image
+---
+
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator"content={Astro.generator} />
+    
+    {/* SEO Meta Tags */}
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={siteUrl} />
+
+    {/* Open Graph / Facebook */}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={`${siteUrl}${shareImage}`} />
+
+    {/* Twitter */}
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={siteUrl} />
+    <meta property="twitter:title" content={pageTitle} />
+    <meta property="twitter:description" content={pageDescription} />
+    <meta property="twitter:image" content={`${siteUrl}${shareImage}`} />
+
+  </head>
+  <body class="bg-slate-100 font-sans">
+    <main class="min-h-screen flex items-center justify-center p-4">
+      <SplitBill client:load />
+    </main>
+  </body>
+</html>
