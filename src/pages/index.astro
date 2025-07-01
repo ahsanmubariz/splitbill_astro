@@ -1,40 +1,60 @@
 ---
 import SplitBill from '../components/SplitBill.tsx';
-const siteUrl = "https://splitbill-astro.pages.dev"; // Replace with your actual domain later
-const pageTitle = "AI Split Bill | Slit Bill Nota Otomatis dengan AI (IDR)";
-const pageDescription = "Split bill with friends effortlessly. Upload a receipt photo, and our AI will automatically scan items, prices, and totals in Indonesian Rupiah (IDR).";
-const shareImage = "/social-share-image.png"; // You should create this image
+
+// Ganti dengan domain asli Anda setelah deployment untuk canonical URL dan Open Graph
+const siteUrl = "https://splitbill-astro.pages.dev";
+const pageTitle = "AI Split Bill Otomatis | Hitung Patungan Nota dengan Mudah (IDR)";
+const pageDescription = "Hemat waktu saat patungan! AI Split Bill otomatis memindai foto nota & menghitung tagihan dengan mudah dalam Rupiah (IDR). Cepat, akurat, dan tanpa ribet.";
+const shareImage = "/social-share-image.png"; // Pastikan Anda membuat gambar ini (disarankan 1200x630px)
 ---
 
+<!DOCTYPE html>
 <html lang="id">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="generator"content={Astro.generator} />
+    <meta name="generator" content={Astro.generator} />
     
-    {/* SEO Meta Tags */}
+    <!-- SEO Meta Tags Utama -->
+    <!-- Tag Judul: Penting untuk peringkat dan apa yang dilihat pengguna di hasil pencarian -->
     <title>{pageTitle}</title>
+    <!-- Meta Deskripsi: Ringkasan singkat konten halaman, mendorong klik dari hasil pencarian -->
     <meta name="description" content={pageDescription} />
+    <!-- Canonical URL: Mencegah masalah konten duplikat, menunjuk ke versi utama halaman ini -->
     <link rel="canonical" href={siteUrl} />
 
-    {/* Open Graph / Facebook */}
+    <!-- Open Graph / Facebook Meta Tags: Untuk tampilan yang kaya saat dibagikan di media sosial -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={siteUrl} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
     <meta property="og:image" content={`${siteUrl}${shareImage}`} />
+    <!-- Ukuran gambar yang disarankan untuk Open Graph adalah 1200x630 piksel -->
 
-    {/* Twitter */}
+    <!-- Twitter Meta Tags: Untuk tampilan yang kaya saat dibagikan di Twitter (X) -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={siteUrl} />
     <meta property="twitter:title" content={pageTitle} />
     <meta property="twitter:description" content={pageDescription} />
     <meta property="twitter:image" content={`${siteUrl}${shareImage}`} />
+    <!-- Ukuran gambar yang disarankan untuk Twitter large_image adalah 1200x675 piksel -->
 
+    <!-- Tailwind CSS (dimuat melalui CDN untuk kemudahan, bisa diintegrasikan lebih lanjut di Astro) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter (opsional, jika ingin menggunakan font ini) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
   </head>
   <body class="bg-slate-100 font-sans">
     <main class="min-h-screen flex items-center justify-center p-4">
+      <!-- Komponen SplitBill akan dimuat di sini. -->
+      <!-- Pastikan konten di dalam SplitBill.tsx memiliki struktur heading (h1, h2, dll.) yang baik -->
+      <!-- dan teks yang relevan dengan kata kunci SEO Anda. -->
       <SplitBill client:load />
     </main>
   </body>
