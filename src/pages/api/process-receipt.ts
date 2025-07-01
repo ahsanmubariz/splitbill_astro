@@ -19,7 +19,8 @@ function arrayBufferToBase64(buffer: ArrayBuffer) {
   return btoa(binary);
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async (context) => {
+    const { request, locals } = context;
   // Check for the correct Content-Type header before processing
   const contentType = request.headers.get('content-type');
   if (!contentType || !contentType.includes('multipart/form-data')) {
@@ -32,7 +33,7 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
   
-  const openRouterApiKey = import.meta.env.OPENROUTER_API_KEY;
+  const openRouterApiKey = locals.runtime?.env?.OPENROUTER_API_KEY;
 
   if (!openRouterApiKey) {
     console.error("Server Error: OPENROUTER_API_KEY is not set in .env file.");
