@@ -33,7 +33,7 @@ export const POST: APIRoute = async (context) => {
     );
   }
   
-  const openRouterApiKey = locals.runtime?.env?.OPENROUTER_API_KEY;
+  const openRouterApiKey = import.meta.env.OPENROUTER_API_KEY;
 
   if (!openRouterApiKey) {
     console.error("Server Error: OPENROUTER_API_KEY is not set in .env file.");

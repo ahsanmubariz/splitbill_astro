@@ -7,13 +7,23 @@
             "start": "astro dev",
             "build": "astro build",
             "preview": "astro preview",
-            "astro": "astro"
+            "astro": "astro",
+            "docker:build": "docker build -t split-bill-app .",
+            "docker:build:dev": "docker build -f Dockerfile.dev -t split-bill-app:dev .",
+            "docker:run": "docker run -p 4321:4321 --env-file .env split-bill-app",
+            "docker:run:dev": "docker run -p 4321:4321 --env-file .env -v $(pwd):/app -v /app/node_modules split-bill-app:dev",
+            "docker:compose:up": "docker-compose up -d",
+            "docker:compose:down": "docker-compose down",
+            "docker:compose:dev": "docker-compose -f docker-compose.dev.yml up",
+            "docker:compose:logs": "docker-compose logs -f",
+            "docker:clean": "docker system prune -f && docker image prune -f"
       },
       "dependencies": {
             "@astrojs/cloudflare": "^12.6.0",
             "@astrojs/react": "^4.0.0",
             "@astrojs/tailwind": "^5.1.0",
             "astro": "^5.10.2",
+            "firebase": "^11.10.0",
             "react": "^18.3.1",
             "react-dom": "^18.3.1",
             "tailwindcss": "^3.4.3"

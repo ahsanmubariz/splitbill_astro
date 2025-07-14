@@ -1,0 +1,28 @@
+# Development Dockerfile
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install dependencies for native modules
+RUN apk add --no-cache libc6-compat
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including dev dependencies)
+RUN npm ci
+
+# Copy source code
+COPY . .
+
+# Set environment variables
+ENV NODE_ENV=development
+ENV HOST=0.0.0.0
+ENV PORT=4321
+
+# Expose port
+EXPOSE 4321
+
+# Start development server
+CMD ["npm", "run", "dev"]

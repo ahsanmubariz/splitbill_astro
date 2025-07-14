@@ -1,4 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 // Define the types for our data structures
 type BillItem = {
@@ -37,10 +39,34 @@ const formatIDR = (amount: number) => {
 export default function SplitBill() {
   const [stage, setStage] = useState<Stage>('upload');
   const [billData, setBillData] = useState<BillData | null>(null);
+
+  // Handler for stage changes with validation
+  const handleStageChange = (newStage: Stage) => {
+    if (newStage === 'assign' && (!billData || billData.items.length === 0)) {
+      setError('Please process a receipt first');
+      return false;
+    }
+    if (newStage === 'summary' && people.length === 0) {
+      setError('Please add at least one person');
+      return false;
+    }
+    setStage(newStage);
+    return true;
+  };
+
+  // Handler for when receipt processing completes
+  const handleReceiptProcessed = (data: BillData) => {
+    setBillData(data);
+    if (window.trackReceiptProcessed) {
+      window.trackReceiptProcessed(data.items.length);
+    }
+    return handleStageChange('assign');
+  };
   const [people, setPeople] = useState<string[]>([]);
   const [newPersonName, setNewPersonName] = useState('');
   const [assignments, setAssignments] = useState<Assignments>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [savingToFirestore, setSavingToFirestore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
 
@@ -55,6 +81,9 @@ export default function SplitBill() {
 
   // Handler for submitting the receipt image
   const handleProcessReceipt = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (window.trackReceiptProcessed) {
+      window.trackReceiptProcessed(billData?.items.length || 0);
+    }
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -207,6 +236,29 @@ export default function SplitBill() {
     return { summary: personTotals, totalAssignedValue: currentTotalAssignedValue };
   }, [billData, people, assignments]);
 
+  const saveBillToFirestore = async () => {
+    if (!billData || people.length === 0) return;
+    
+    setSavingToFirestore(true);
+    try {
+      await addDoc(collection(db, 'bills'), {
+        items: billData.items,
+        assignments,
+        people,
+        total: billData.total,
+        createdAt: new Date(),
+        tax: billData.tax,
+        service_charge: billData.service_charge
+      });
+      alert('Bill saved to Firestore successfully!');
+    } catch (error) {
+      console.error('Error saving bill:', error);
+      alert('Failed to save bill to Firestore');
+    } finally {
+      setSavingToFirestore(false);
+    }
+  };
+
   const handleStartOver = () => {
     setStage('upload');
     setBillData(null);
@@ -346,9 +398,21 @@ export default function SplitBill() {
             <span className="font-bold text-lg text-slate-800">Total Keseluruhan</span>
             <span className="font-bold text-lg text-slate-800">{formatIDR(billData.total)}</span>
           </div>
-          <button onClick={handleStartOver} className="mt-6 w-full bg-slate-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-slate-700 transition-all">
-            Mulai Lagi
-           </button>
+          <div className="flex gap-4 mt-6">
+            <button
+              onClick={saveBillToFirestore}
+              disabled={savingToFirestore}
+              className="flex-1 bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-all disabled:bg-slate-400 disabled:cursor-not-allowed"
+            >
+              {savingToFirestore ? 'Menyimpan...' : 'Simpan ke Cloud'}
+            </button>
+            <button
+              onClick={handleStartOver}
+              className="flex-1 bg-slate-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-slate-700 transition-all"
+            >
+              Mulai Lagi
+            </button>
+          </div>
         </div>
       )}
     </div>
