@@ -20,7 +20,7 @@ function arrayBufferToBase64(buffer: ArrayBuffer) {
 }
 
 export const POST: APIRoute = async (context) => {
-    const { request, locals } = context;
+  const { request, locals } = context;
   // Check for the correct Content-Type header before processing
   const contentType = request.headers.get('content-type');
   if (!contentType || !contentType.includes('multipart/form-data')) {
@@ -32,8 +32,8 @@ export const POST: APIRoute = async (context) => {
       { status: 415 } // 415 Unsupported Media Type is the correct status code
     );
   }
-  
-  const openRouterApiKey =  locals.runtime?.env?.PRIVATE_OPENROUTER_API_KEY;
+
+  const openRouterApiKey = import.meta.env.PRIVATE_OPENROUTER_API_KEY || locals.runtime?.env?.PRIVATE_OPENROUTER_API_KEY;
 
 
 
@@ -84,7 +84,7 @@ export const POST: APIRoute = async (context) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "qwen/qwen2.5-vl-32b-instruct:free", 
+        model: "nvidia/nemotron-nano-12b-v2-vl:free",
         messages: [
           {
             role: "user",
