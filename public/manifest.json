@@ -1,0 +1,16 @@
+{
+    "name": "AI Split Bill Otomatis",
+    "short_name": "SplitBill",
+    "description": "Hemat waktu saat patungan! AI Split Bill otomatis memindai foto nota & menghitung tagihan dengan mudah dalam Rupiah (IDR).",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#f1f5f9",
+    "theme_color": "#3b82f6",
+    "icons": [
+        {
+            "src": "/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ]
+}

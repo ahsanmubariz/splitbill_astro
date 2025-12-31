@@ -2,12 +2,13 @@ import { defineConfig } from 'astro/config';
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
 import cloudflare from "@astrojs/cloudflare";
+import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
   output: "server",
   adapter: cloudflare(),
-  integrations: [react(), tailwind()],
+  integrations: [react(), tailwind(), sitemap()],
 
   // Production optimizations
   build: {
@@ -45,5 +46,5 @@ export default defineConfig({
 
   // Site configuration for SEO
   site: process.env.SITE_URL || 'https://ai-splitbill-astro.cloud/',
-  
+
 });

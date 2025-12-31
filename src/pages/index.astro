@@ -1,129 +1,223 @@
 ---
-import SplitBill from '../components/SplitBill.tsx';
+import SplitBill from "../components/SplitBill.tsx";
+import { SEO } from "astro-seo";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
 
 // Environment variables with fallbacks
-const siteUrl = import.meta.env.SITE || 'https://ai-splitbill-astro.cloud/';
-const pageTitle = "AI Split Bill Otomatis | Hitung Patungan Nota dengan Mudah (IDR)";
-const pageDescription = "Hemat waktu saat patungan! AI Split Bill otomatis memindai foto nota & menghitung tagihan dengan mudah dalam Rupiah (IDR). Cepat, akurat, dan tanpa ribet.";
+const siteUrl = import.meta.env.SITE || "https://ai-splitbill-astro.cloud/";
+const pageTitle =
+  "AI Split Bill Otomatis | Hitung Patungan Nota dengan Mudah (IDR)";
+const pageDescription =
+  "Hemat waktu saat patungan! AI Split Bill otomatis memindai foto nota & menghitung tagihan dengan mudah dalam Rupiah (IDR). Cepat, akurat, dan tanpa ribet.";
 const shareImage = "/social-share-image.png"; // 1200x630px
-const keywords = "split bill, patungan, hitung tagihan, AI split bill, bagi tagihan, nota restoran, pembagian bill, kalkulator patungan, Rupiah, IDR";
+const keywords =
+  "split bill, patungan, hitung tagihan, AI split bill, bagi tagihan, nota restoran, pembagian bill, kalkulator patungan, Rupiah, IDR";
 const locale = "id_ID";
+
+// JSON-LD data
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "AI Split Bill Otomatis",
+  alternateName: "AI Split Bill",
+  url: siteUrl,
+  description: pageDescription,
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web Browser",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "IDR",
+  },
+  author: {
+    "@type": "Person",
+    name: "Accang Gokil",
+  },
+  keywords: keywords,
+  featureList: [
+    "Otomatis scan nota dengan AI",
+    "Hitung patungan dalam Rupiah",
+    "Pembagian bill yang adil",
+    "UI modern dan responsif",
+  ],
+};
 ---
 
-<!DOCTYPE html>
-<html lang="id" prefix="og: https://ogp.me/ns#">
+<!doctype html>
+<html lang="id">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
-    
-    <!-- Primary Meta Tags -->
-    <title>{pageTitle}</title>
-    <meta name="description" content={pageDescription} />
-    <meta name="keywords" content={keywords} />
-    <link rel="canonical" href={siteUrl} />
-    <meta name="robots" content="index, follow" />
-    <meta name="language" content="Indonesian" />
-    <meta name="revisit-after" content="7 days" />
-    <meta name="author" content="Accang Gokil" />
-    <meta name="geo.region" content="ID" />
-    <meta name="geo.placename" content="Indonesia" />
+    <meta name="theme-color" content="#3b82f6" />
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={siteUrl} />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={pageDescription} />
-    <meta property="og:image" content={`${siteUrl}${shareImage}`} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content={locale} />
-    <meta property="og:site_name" content="AI Split Bill" />
+    <SEO
+      title={pageTitle}
+      description={pageDescription}
+      canonical={siteUrl}
+      openGraph={{
+        basic: {
+          title: pageTitle,
+          type: "website",
+          image: `${siteUrl}${shareImage}`,
+          url: siteUrl,
+        },
+        optional: {
+          description: pageDescription,
+          locale: locale,
+          siteName: "AI Split Bill",
+        },
+        image: {
+          width: 1200,
+          height: 630,
+          alt: "AI Split Bill Preview",
+        },
+      }}
+      twitter={{
+        card: "summary_large_image",
+        site: "@aisplitbill",
+        creator: "@accanggokil",
+        title: pageTitle,
+        description: pageDescription,
+        image: `${siteUrl}${shareImage}`,
+      }}
+      extend={{
+        meta: [
+          { name: "keywords", content: keywords },
+          { name: "robots", content: "index, follow" },
+          { name: "language", content: "Indonesian" },
+          { name: "author", content: "Accang Gokil" },
+          { name: "geo.region", content: "ID" },
+          { name: "geo.placename", content: "Indonesia" },
+        ],
+        link: [{ rel: "apple-touch-icon", href: "/favicon.svg" }],
+      }}
+    />
 
     <!-- Structured Data (JSON-LD) -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "AI Split Bill Otomatis",
-        "url": "{siteUrl}",
-        "description": "{pageDescription}",
-        "applicationCategory": "FinanceApplication",
-        "operatingSystem": "Web Browser",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "IDR"
-        }
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <style is:global>
+      :root {
+        --primary: #3b82f6;
       }
-    </script>
-
-    <!-- Preload critical resources -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" />
-    <link rel="preload" href="/social-share-image.png" as="image" />
-
-    <!-- CSS -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <style>
       body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f1f5f9;
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc;
+        margin: 0;
+        padding: 0;
       }
-      /* Critical CSS inlined */
       .seo-optimized {
         max-width: 100%;
         overflow-x: hidden;
       }
+      .bg-gradient-mesh {
+        background-color: #f8fafc;
+        background-image:
+          radial-gradient(
+            at 0% 0%,
+            rgba(59, 130, 246, 0.1) 0px,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 100% 0%,
+            rgba(99, 102, 241, 0.1) 0px,
+            transparent 50%
+          );
+      }
     </style>
   </head>
-  <body class="bg-slate-100 font-sans seo-optimized">
-    <!-- Hidden SEO content for crawlers -->
-    <div class="sr-only" aria-hidden="true">
-      <h1>AI Split Bill Otomatis</h1>
-      <h2>Alat Hitung Patungan Nota Restoran dalam Rupiah</h2>
-      <p>Gunakan teknologi AI kami untuk membagi tagihan restoran secara otomatis dengan teman-teman. Cukup upload foto nota, dan sistem kami akan menghitung pembagian yang adil dalam mata uang Rupiah (IDR).</p>
-      <ul>
-        <li>Split bill otomatis</li>
-        <li>Hitung patungan restoran</li>
-        <li>Pembagian tagihan akurat</li>
-        <li>Kalkulator pembayaran kelompok</li>
-        <li>Alat bagi tagihan dalam Rupiah</li>
-      </ul>
-    </div>
+  <body class="bg-gradient-mesh font-sans seo-optimized">
+    <main class="min-h-screen flex flex-col items-center py-12 px-4">
+      <header class="text-center mb-10">
+        <h1
+          class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600"
+        >
+          AI Split Bill Otomatis
+        </h1>
+        <p
+          class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed"
+        >
+          Ubah foto struk belanja atau restoran Anda menjadi pembagian tagihan
+          yang akurat secara otomatis hanya dalam hitungan detik.
+        </p>
+      </header>
 
-    <main class="min-h-screen flex items-center justify-center p-4">
-      <SplitBill client:only />
+      <section
+        class="w-full max-w-4xl flex justify-center"
+        aria-label="Kalkulator Split Bill"
+      >
+        <SplitBill client:load />
+      </section>
+
+      <article class="mt-20 max-w-3xl text-center">
+        <h2 class="text-2xl font-bold text-slate-800 mb-4">
+          Mengapa Menggunakan AI Split Bill?
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+          <div
+            class="p-6 bg-white rounded-2xl shadow-sm border border-slate-100"
+          >
+            <h3 class="font-bold text-blue-600 mb-2">Scan Otomatis</h3>
+            <p class="text-slate-600 text-sm">
+              Tidak perlu mengetik item satu per satu. AI kami akan membaca foto
+              struk Anda.
+            </p>
+          </div>
+          <div
+            class="p-6 bg-white rounded-2xl shadow-sm border border-slate-100"
+          >
+            <h3 class="font-bold text-blue-600 mb-2">Akurat & Cepat</h3>
+            <p class="text-slate-600 text-sm">
+              Hitung pajak dan biaya layanan secara proporsional untuk setiap
+              orang.
+            </p>
+          </div>
+          <div
+            class="p-6 bg-white rounded-2xl shadow-sm border border-slate-100"
+          >
+            <h3 class="font-bold text-blue-600 mb-2">Mendukung IDR</h3>
+            <p class="text-slate-600 text-sm">
+              Dibuat khusus untuk format nota dan mata uang Rupiah Indonesia.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <footer
+        class="mt-24 pt-8 border-t border-slate-200 w-full max-w-4xl text-center text-slate-500 text-sm"
+      >
+        <p>
+          &copy; {new Date().getFullYear()} AI Split Bill - Solusi Patungan Cerdas
+          Indonesia oleh Accang Gokil
+        </p>
+        <p class="mt-2">
+          Membantu ribuan orang membagi tagihan nota restoran tanpa pusing.
+        </p>
+      </footer>
     </main>
 
-    <!-- Async load non-critical JS -->
-    <script async src="https://cdn.tailwindcss.com"></script>
-    
     <!-- Analytics -->
     <script>
       // Only load analytics in production
       if (import.meta.env.PROD) {
-        import('../lib/firebase').then(({ analytics }) => {
+        import("../lib/firebase").then((module: any) => {
+          const analytics = module.analytics;
           if (analytics) {
-            import('firebase/analytics').then(({ logEvent }) => {
-              logEvent(analytics, 'page_view', {
-                page_title: 'Home',
-                page_path: '/',
-                page_location: window.location.href
+            import("firebase/analytics").then(({ logEvent }) => {
+              logEvent(analytics, "page_view", {
+                page_title: "Home",
+                page_path: "/",
+                page_location: window.location.href,
               });
             });
           }
         });
-      }
-    </script>
-
-    <!-- Performance monitoring -->
-    <script>
-      if ('connection' in navigator) {
-        const connection = navigator.connection;
-        if (connection) {
-          const { effectiveType, saveData, rtt, downlink } = connection;
-        }
       }
     </script>
   </body>

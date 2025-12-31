@@ -171,7 +171,7 @@ export default function SplitBill() {
         // Don't update if it exceeds available quantity
         return prev;
       }
-      
+
       if (newQty === 0) {
         delete itemAssignments[personIndex];
       } else {
@@ -238,7 +238,7 @@ export default function SplitBill() {
 
   const saveBillToFirestore = async () => {
     if (!billData || people.length === 0) return;
-    
+
     setSavingToFirestore(true);
     try {
       await addDoc(collection(db, 'bills'), {
@@ -276,9 +276,7 @@ export default function SplitBill() {
     <div className="w-full max-w-2xl mx-auto p-4 md:p-6 bg-slate-50 rounded-2xl shadow-lg border border-slate-200">
       {/* Stage: Upload */}
       {stage === 'upload' && (
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">Bagi Tagihan Anda</h1>
-          <p className="text-slate-500 mb-6">Unggah foto struk Anda untuk memulai.</p>
+        <div className="text-center pt-4">
           <form onSubmit={handleProcessReceipt}>
             <div className="mb-4">
               <label htmlFor="receipt-upload" className="block w-full cursor-pointer bg-white border-2 border-dashed border-slate-300 rounded-xl p-8 hover:border-blue-500 hover:bg-blue-50 transition-colors">

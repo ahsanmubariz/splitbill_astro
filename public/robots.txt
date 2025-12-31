@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ai-splitbill-astro.cloud/sitemap-index.xml
