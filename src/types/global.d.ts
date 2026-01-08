@@ -1,5 +1,2 @@
-// Extend Window interface for analytics functions
-interface Window {
-  trackStageChange?: (stage: string, previousStage: string) => Promise<void>;
-  trackReceiptProcessed?: (itemCount: number, receiptType?: string) => Promise<void>;
-}
+// Global type definitions for the split-bill-app
+// This file is intentionally minimal as analytics is now handled via the analytics module

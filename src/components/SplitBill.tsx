@@ -1,6 +1,18 @@
 import { useState, useMemo, useEffect } from 'react';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import {
+  trackReceiptUploadStart,
+  trackReceiptProcessed,
+  trackReceiptProcessingFailed,
+  trackPersonAdded,
+  trackPersonRemoved,
+  trackItemAssigned,
+  trackStageChanged,
+  trackBillSaved,
+  trackBillSaveFailed,
+  trackSessionCompleted,
+} from '../lib/analytics';
 
 // Define the types for our data structures
 type BillItem = {
@@ -39,6 +51,7 @@ const formatIDR = (amount: number) => {
 export default function SplitBill() {
   const [stage, setStage] = useState<Stage>('upload');
   const [billData, setBillData] = useState<BillData | null>(null);
+  const [sessionStartTime] = useState<number>(Date.now());
 
   // Handler for stage changes with validation
   const handleStageChange = (newStage: Stage) => {
@@ -50,16 +63,17 @@ export default function SplitBill() {
       setError('Please add at least one person');
       return false;
     }
+
+    // Track stage change
+    trackStageChanged(newStage, stage);
     setStage(newStage);
     return true;
   };
 
   // Handler for when receipt processing completes
-  const handleReceiptProcessed = (data: BillData) => {
+  const handleReceiptProcessed = (data: BillData, processingTime: number) => {
     setBillData(data);
-    if (window.trackReceiptProcessed) {
-      window.trackReceiptProcessed(data.items.length);
-    }
+    trackReceiptProcessed(data.items.length, data.total, processingTime);
     return handleStageChange('assign');
   };
   const [people, setPeople] = useState<string[]>([]);
@@ -76,14 +90,13 @@ export default function SplitBill() {
     if (file) {
       setFilePreview(URL.createObjectURL(file));
       setError(null);
+      // Track file selection
+      trackReceiptUploadStart(file.size, file.type);
     }
   };
 
   // Handler for submitting the receipt image
   const handleProcessReceipt = async (e: React.FormEvent<HTMLFormElement>) => {
-    if (window.trackReceiptProcessed) {
-      window.trackReceiptProcessed(billData?.items.length || 0);
-    }
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -96,6 +109,7 @@ export default function SplitBill() {
 
     setIsLoading(true);
     setError(null);
+    const startTime = Date.now();
 
     try {
       const response = await fetch('/api/process-receipt', {
@@ -109,10 +123,14 @@ export default function SplitBill() {
         throw new Error(data.error || 'Something went wrong.');
       }
 
+      const processingTime = Date.now() - startTime;
       setBillData(data);
+      trackReceiptProcessed(data.items.length, data.total, processingTime);
+      trackStageChanged('assign', 'upload');
       setStage('assign');
     } catch (err: any) {
       setError(err.message);
+      trackReceiptProcessingFailed(err.message, 'api_error');
       setStage('upload');
     } finally {
       setIsLoading(false);
@@ -122,13 +140,19 @@ export default function SplitBill() {
   // Handlers for managing people
   const handleAddPerson = () => {
     if (newPersonName.trim() && !people.includes(newPersonName.trim())) {
-      setPeople([...people, newPersonName.trim()]);
+      const updatedPeople = [...people, newPersonName.trim()];
+      setPeople(updatedPeople);
+      trackPersonAdded(updatedPeople.length);
       setNewPersonName('');
     }
   };
 
   const handleRemovePerson = (indexToRemove: number) => {
-    setPeople(prevPeople => prevPeople.filter((_, index) => index !== indexToRemove));
+    setPeople(prevPeople => {
+      const updated = prevPeople.filter((_, index) => index !== indexToRemove);
+      trackPersonRemoved(updated.length);
+      return updated;
+    });
 
     setAssignments(prevAssignments => {
       const newAssignments: Assignments = {};
@@ -250,9 +274,18 @@ export default function SplitBill() {
         tax: billData.tax,
         service_charge: billData.service_charge
       });
+
+      // Track successful save
+      trackBillSaved(billData.items.length, people.length, billData.total);
+
+      // Track session completion
+      const sessionDuration = Date.now() - sessionStartTime;
+      trackSessionCompleted(sessionDuration, billData.items.length, people.length);
+
       alert('Bill saved to Firestore successfully!');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving bill:', error);
+      trackBillSaveFailed(error.message || 'Unknown error');
       alert('Failed to save bill to Firestore');
     } finally {
       setSavingToFirestore(false);

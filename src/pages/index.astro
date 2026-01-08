@@ -206,17 +206,8 @@ const jsonLd = {
     <script>
       // Only load analytics in production
       if (import.meta.env.PROD) {
-        import("../lib/firebase").then((module: any) => {
-          const analytics = module.analytics;
-          if (analytics) {
-            import("firebase/analytics").then(({ logEvent }) => {
-              logEvent(analytics, "page_view", {
-                page_title: "Home",
-                page_path: "/",
-                page_location: window.location.href,
-              });
-            });
-          }
+        import("../lib/analytics").then((module) => {
+          module.initializeAnalytics();
         });
       }
     </script>
