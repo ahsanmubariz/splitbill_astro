@@ -84,7 +84,7 @@ export const POST: APIRoute = async (context) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "nvidia/nemotron-nano-12b-v2-vl:free",
+        model: "bytedance-seed/seedream-4.5",
         messages: [
           {
             role: "user",
