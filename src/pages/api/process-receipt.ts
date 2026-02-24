@@ -84,7 +84,7 @@ export const POST: APIRoute = async (context) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "qwen/qwen3-vl-30b-a3b-thinking",
+        model: "google/gemma-3-27b-it:free",
         messages: [
           {
             role: "user",
