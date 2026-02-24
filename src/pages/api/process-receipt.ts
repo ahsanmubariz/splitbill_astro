@@ -84,7 +84,7 @@ export const POST: APIRoute = async (context) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "bytedance-seed/seedream-4.5",
+        model: "qwen/qwen3-vl-30b-a3b-thinking",
         messages: [
           {
             role: "user",
